@@ -1,0 +1,27 @@
+[
+    {
+        "title": "Introduction to Machine Learning",
+        "author": "John Doe",
+        "pdf_url": "https://example.com/pdfs/machine_learning_intro.pdf"
+    },
+    {
+        "title": "Advanced JavaScript Concepts",
+        "author": "Jane Smith",
+        "pdf_url": "https://example.com/pdfs/advanced_javascript.pdf"
+    },
+    {
+        "title": "Understanding Firebase",
+        "author": "Alice Johnson",
+        "pdf_url": "https://example.com/pdfs/understanding_firebase.pdf"
+    },
+    {
+        "title": "Web Development Best Practices",
+        "author": "Bob Brown",
+        "pdf_url": "https://example.com/pdfs/web_dev_best_practices.pdf"
+    },
+    {
+        "title": "Data Structures and Algorithms",
+        "author": "Charlie Davis",
+        "pdf_url": "https://example.com/pdfs/data_structures_algorithms.pdf"
+    }
+]
