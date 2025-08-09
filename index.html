@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXAMHUB.AI - India's #1 AI Exam Paper Search Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#8B5CF6',
+                        accent: '#06B6D4'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+        .glow-effect:hover {
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            transform: translateY(-2px);
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .voice-btn {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            transition: all 0.3s ease;
+        }
+        .voice-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold text-primary">EXAMHUB.AI</div>
+                    <div class="ml-2 text-xs bg-secondary text-white px-2 py-1 rounded-full">BETA</div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 hover:text-primary transition-colors">Features</button>
+                    <button class="text-gray-600 hover:text-primary transition-colors">Pricing</button>
+                    <button onclick="openLoginModal()" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">Login</button>
+                    <button onclick="openLoginModal()" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors glow-effect">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 fade-in">India's #1 AI Exam Paper Search Tool</h1>
+            <p class="text-xl md:text-2xl mb-8 fade-in" style="animation-delay: 0.2s">Type any subject, class or year – get direct PDF instantly</p>
+            <!-- Main Search Bar -->
+            <div class="max-w-3xl mx-auto mb-8 fade-in" style="animation-delay: 0.4s">
+                <div class="relative">
+                    <input type="text" id="mainSearch" placeholder="Try: '2023 Class 12 Chemistry paper' or 'CBSE 10th Maths 2022'" 
+                           class="w-full px-6 py-4 text-lg text-gray-800 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300 pr-20">
+                    <button class="voice-btn absolute right-2 top-2 p-3 rounded-xl text-white" onclick="startVoiceSearch()">
+                        🎤
+                    </button>
+                </div>
+                <!-- AI Suggestions -->
+                <div id="suggestions" class="mt-4 bg-white rounded-xl shadow-lg p-4 text-gray-800 hidden">
+                    <div class="text-sm text-gray-600 mb-2">🤖 AI Suggestions:</div>
+                    <div class="space-y-2">
+                        <div class="suggestion-item p-2 hover:bg-gray-100 rounded cursor-pointer">CBSE Class 12 Physics 2023 Board Paper</div>
+                        <div class="suggestion-item p-2 hover:bg-gray-100 rounded cursor-pointer">Maharashtra Board 10th Science 2022</div>
+                        <div class="suggestion-item p-2 hover:bg-gray-100 rounded cursor-pointer">NCERT Class 11 Chemistry Sample Papers</div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in" style="animation-delay: 0.6s">
+                <button onclick="performSearch()" class="bg-white text-primary px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all transform hover:scale-105">
+                    🔍 Start Searching
+                </button>
+                <button onclick="openLoginModal()" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-primary transition-all transform hover:scale-105">
+                    Login / Signup
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3-Step Process -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">How It Works</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center fade-in">
+                    <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">1</div>
+                    <h3 class="text-xl font-semibold mb-2">Type Your Query</h3>
+                    <p class="text-gray-600">Enter subject, class, year, or board name</p>
+                </div>
+                <div class="text-center fade-in" style="animation-delay: 0.2s">
+                    <div class="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">2</div>
+                    <h3 class="text-xl font-semibold mb-2">Let AI Find Best Papers</h3>
+                    <p class="text-gray-600">Our GPT-powered system finds relevant papers</p>
+                </div>
+                <div class="text-center fade-in" style="animation-delay: 0.4s">
+                    <div class="w-20 h-20 bg-accent rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">3</div>
+                    <h3 class="text-xl font-semibold mb-2">Click and Download PDF</h3>
+                    <p class="text-gray-600">Instant access to high-quality exam papers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Trending Papers -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800">Top Trending Papers</h2>
+                <span class="ml-3 text-2xl">🔥</span>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 fade-in">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-medium">Class 12</span>
+                        <span class="text-sm text-gray-500">📈 2.3k downloads</span>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">CBSE Physics 2023 Board Paper</h3>
+                    <p class="text-gray-600 text-sm mb-4">Complete question paper with solutions</p>
+                    <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                        🔒 Upgrade to Download
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 fade-in" style="animation-delay: 0.2s">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-medium">Class 10</span>
+                        <span class="text-sm text-gray-500">📈 1.8k downloads</span>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Maharashtra Board Maths 2022</h3>
+                    <p class="text-gray-600 text-sm mb-4">State board previous year paper</p>
+                    <button class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors">
+                        📄 Free Download
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 fade-in" style="animation-delay: 0.4s">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm font-medium">Class 12</span>
+                        <span class="text-sm text-gray-500">📈 1.5k downloads</span>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">NCERT Chemistry Sample Papers</h3>
+                    <p class="text-gray-600 text-sm mb-4">Practice papers with marking scheme</p>
+                    <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                        🔒 Pro User Required
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Plans -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">Choose Your Plan</h2>
+            <p class="text-center text-gray-600 mb-12">Unlock unlimited access to thousands of exam papers</p>
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Free Plan -->
+                <div class="bg-gray-50 rounded-2xl p-8 fade-in">
+                    <h3 class="text-2xl font-bold mb-4">Free</h3>
+                    <div class="text-4xl font-bold mb-6">₹0<span class="text-lg text-gray-500">/month</span></div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> 5 downloads per month</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Basic search</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Limited AI suggestions</li>
+                        <li class="flex items-center"><span class="text-red-500 mr-2">✗</span> No premium papers</li>
+                    </ul>
+                    <button class="w-full bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold">Current Plan</button>
+                </div>
+                <!-- Pro Plan -->
+                <div class="bg-primary text-white rounded-2xl p-8 transform scale-105 glow-effect fade-in" style="animation-delay: 0.2s">
+                    <div class="bg-secondary px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">MOST POPULAR</div>
+                    <h3 class="text-2xl font-bold mb-4">Pro</h3>
+                    <div class="text-4xl font-bold mb-6">₹29<span class="text-lg opacity-75">/month</span></div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Unlimited downloads</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Advanced AI search</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> All premium papers</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Download history</li>
+                    </ul>
+                    <button class="w-full bg-white text-primary py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors pulse-animation">
+                        Upgrade Now
+                    </button>
+                </div>
+                <!-- Premium Plan -->
+                <div class="bg-gray-50 rounded-2xl p-8 fade-in" style="animation-delay: 0.4s">
+                    <h3 class="text-2xl font-bold mb-4">Premium</h3>
+                    <div class="text-4xl font-bold mb-6">₹49<span class="text-lg text-gray-500">/month</span></div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Everything in Pro</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Priority support</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Early access to new papers</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Custom study plans</li>
+                    </ul>
+                    <button class="w-full bg-secondary text-white py-3 rounded-xl font-semibold hover:bg-purple-600 transition-colors">
+                        Choose Premium
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Welcome Back to ExamHub.ai</h2>
+                <p class="text-gray-600">Login to access thousands of exam papers</p>
+            </div>
+            <form class="space-y-4">
+                <div>
+                    <input type="email" placeholder="Email address" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                <div>
+                    <input type="password" placeholder="Password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                <button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors">
+                    Login to Access Papers
+                </button>
+            </form>
+            <div class="my-6 text-center text-gray-500">or</div>
+            <button onclick="signInWithGoogle()" class="w-full bg-red-500 text-white py-3 rounded-xl font-semibold hover:bg-red-600 transition-colors flex items-center justify-center">
+                <span class="mr-2">🔍</span> Continue with Google
+            </button>
+            <div class="mt-6 text-center">
+                <button onclick="closeLoginModal()" class="text-gray-500 hover:text-gray-700">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Chat -->
+    <div class="fixed bottom-6 right-6 z-40">
+        <button class="bg-primary text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-all transform hover:scale-110">
+            💬
+        </button>
+    </div>
+
+    <!-- Firebase SDK and initialization -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyD4a9-GfumDhkpmkSvr4tKfvHxhTq5upgw",
+          authDomain: "examhub-auth-5f84b.firebaseapp.com",
+          projectId: "examhub-auth-5f84b",
+          storageBucket: "examhub-auth-5f84b.appspot.com",
+          messagingSenderId: "577946327245",
+          appId: "1:577946327245:web:0820c5e11c67f3ec32b184",
+          measurementId: "G-6Q06GL3C4X"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        // Initialize Auth
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Expose signInWithGoogle to window so you can call it from inline HTML
+        window.signInWithGoogle = async function() {
+          try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            alert("Welcome, " + user.displayName + "!");
+            // You can close the modal or redirect here
+            document.getElementById('loginModal').classList.add('hidden');
+          } catch (error) {
+            alert("Google sign-in failed: " + error.message);
+          }
+        }
+    </script>
+
+    <!-- Your existing script -->
+    <script>
+        // Search functionality
+        function performSearch() {
+            const query = document.getElementById('mainSearch').value;
+            if (query.trim()) {
+                showSuggestions();
+                // Simulate search results
+                setTimeout(() => {
+                    alert(`🔍 Found 23 papers for "${query}". Login to download!`);
+                }, 1000);
+            }
+        }
+
+        function showSuggestions() {
+            document.getElementById('suggestions').classList.remove('hidden');
+        }
+
+        function startVoiceSearch() {
+            alert('🎤 Voice search activated! Say your query...');
+            // In a real app, this would use Web Speech API
+        }
+
+        // Modal functions
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        // Search input event listener
+        document.getElementById('mainSearch').addEventListener('input', function() {
+            if (this.value.length > 2) {
+                showSuggestions();
+            } else {
+                document.getElementById('suggestions').classList.add('hidden');
+            }
+        });
+
+        // Suggestion click handlers
+        document.querySelectorAll('.suggestion-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.getElementById('mainSearch').value = this.textContent;
+                document.getElementById('suggestions').classList.add('hidden');
+                performSearch();
+            });
+        });
+
+        // Enter key search
+        document.getElementById('mainSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
