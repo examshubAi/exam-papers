@@ -3,366 +3,440 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EXAMHUB.AI - India's #1 AI Exam Paper Search Tool</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3B82F6',
-                        secondary: '#8B5CF6',
-                        accent: '#06B6D4'
-                    }
-                }
-            }
-        }
-    </script>
+    <title>Secure Authentication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .glow-effect {
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            padding: 40px;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            z-index: -1;
+        }
+        
+        .welcome-section {
+            transition: all 0.5s ease;
+        }
+        
+        .logo {
+            font-size: 60px;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        
+        .get-started-btn {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .get-started-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .get-started-btn:active {
+            transform: translateY(0);
+        }
+        
+        .auth-forms {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-top: 20px;
+        }
+        
+        .form-header {
+            margin-bottom: 25px;
+        }
+        
+        .form-header h2 {
+            color: #333;
+            font-size: 26px;
+            margin-bottom: 5px;
+        }
+        
+        .form-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+        
+        .form-toggle button {
+            background: none;
+            border: none;
+            color: #ff416c;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 5px;
             transition: all 0.3s ease;
         }
-        .glow-effect:hover {
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
-            transform: translateY(-2px);
+        
+        .form-toggle button.active {
+            background: rgba(255, 65, 108, 0.1);
         }
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s ease forwards;
+        
+        .form-toggle button:hover {
+            background: rgba(255, 65, 108, 0.15);
         }
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            border-color: #ff416c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 65, 108, 0.2);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 65, 108, 0.3);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .show-forms {
+            max-height: 600px;
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #777;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+                margin: 20px;
             }
-        }
-        .pulse-animation {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .voice-btn {
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
-            transition: all 0.3s ease;
-        }
-        .voice-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50">
-    <!-- Login Required Screen -->
-    <div id="loginRequired" class="fixed inset-0 bg-white z-50 flex items-center justify-center px-4">
-        <div class="max-w-md w-full text-center">
-            <h1 class="text-4xl font-bold text-primary mb-6">EXAMHUB.AI</h1>
-            <div class="bg-white rounded-2xl p-8 shadow-xl">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Login Required</h2>
-                <p class="text-gray-600 mb-6">Please login to access India's #1 AI Exam Paper Search Tool</p>
-                <button onclick="openLoginModal()" class="w-full bg-primary text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors mb-3">
-                    Login
-                </button>
-                <button onclick="openLoginModal()" class="w-full bg-secondary text-white py-3 rounded-xl font-semibold hover:bg-purple-600 transition-colors glow-effect">
-                    Sign Up
-                </button>
+<body>
+    <div class="container">
+        <div class="welcome-section" id="welcomeSection">
+            <div class="logo">
+                <i class="fas fa-lock"></i>
             </div>
+            <h1>Welcome to SecureApp</h1>
+            <p>Access your personalized dashboard and manage all your activities in one place. Your security is our top priority.</p>
+            <button class="get-started-btn" id="getStartedBtn">Get Started</button>
         </div>
-    </div>
-
-    <!-- Main Content (hidden initially) -->
-    <div id="mainContent" style="display: none;">
-        <!-- Navigation -->
-        <nav class="bg-white shadow-sm sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-16">
-                    <div class="flex items-center">
-                        <div class="text-2xl font-bold text-primary">EXAMHUB.AI</div>
-                        <div class="ml-2 text-xs bg-secondary text-white px-2 py-1 rounded-full">BETA</div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <button class="text-gray-600 hover:text-primary transition-colors">Features</button>
-                        <button class="text-gray-600 hover:text-primary transition-colors">Pricing</button>
-                        <div id="userEmail" class="hidden text-sm font-medium text-gray-700"></div>
-                        <div id="authButtons" class="flex items-center space-x-4">
-                            <button onclick="openLoginModal()" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">Login</button>
-                            <button onclick="openLoginModal()" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors glow-effect">Sign Up</button>
-                        </div>
-                        <button id="logoutButton" onclick="handleLogout()" class="hidden bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">Logout</button>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Hero Section -->
-        <section class="gradient-bg text-white py-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h1 class="text-5xl md:text-6xl font-bold mb-6 fade-in">India's #1 AI Exam Paper Search Tool</h1>
-                <p class="text-xl md:text-2xl mb-8 fade-in" style="animation-delay: 0.2s">Type any subject, class or year – get direct PDF instantly</p>
-                <!-- Main Search Bar -->
-                <div class="max-w-3xl mx-auto mb-8 fade-in" style="animation-delay: 0.4s">
-                    <div class="relative">
-                        <input type="text" id="mainSearch" placeholder="Try: '2023 Class 12 Chemistry paper' or 'CBSE 10th Maths 2022'" 
-                               class="w-full px-6 py-4 text-lg text-gray-800 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300 pr-20">
-                        <button class="voice-btn absolute right-2 top-2 p-3 rounded-xl text-white" onclick="startVoiceSearch()">
-                            🎤
-                        </button>
-                    </div>
-                    <!-- AI Suggestions -->
-                    <div id="suggestions" class="mt-4 bg-white rounded-xl shadow-lg p-4 text-gray-800 hidden">
-                        <div class="text-sm text-gray-600 mb-2">🤖 AI Suggestions:</div>
-                        <div class="space-y-2">
-                            <div class="suggestion-item p-2 hover:bg-gray-100 rounded cursor-pointer">CBSE Class 12 Physics 2023 Board Paper</div>
-                            <div class="suggestion-item p-2 hover:bg-gray-100 rounded cursor-pointer">Maharashtra Board 10th Science 2022</div>
-                            <div class="suggestion-item p-2 hover:bg-gray-100 rounded cursor-pointer">NCERT Class 11 Chemistry Sample Papers</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in" style="animation-delay: 0.6s">
-                    <button onclick="performSearch()" class="bg-white text-primary px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all transform hover:scale-105">
-                        🔍 Start Searching
-                    </button>
-                    <button id="heroAuthButton" onclick="checkAuthBeforeAction()" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-primary transition-all transform hover:scale-105">
-                        Login / Signup
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Rest of your content sections remain the same -->
-        <!-- 3-Step Process, Top Trending Papers, Pricing Plans etc. -->
         
-    </div>
-
-    <!-- Login Modal -->
-    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
-            <div class="text-center mb-6">
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">Welcome to ExamHub.ai</h2>
-                <p class="text-gray-600">Login to access thousands of exam papers</p>
-            </div>
-            <form id="loginForm" class="space-y-4">
-                <div>
-                    <input type="email" id="loginEmail" placeholder="Email address" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary" required>
-                </div>
-                <div>
-                    <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary" required>
-                </div>
-                <button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors">
-                    Login
-                </button>
-            </form>
-            <div class="my-6 text-center text-gray-500">or</div>
-            <button onclick="signInWithGoogle()" class="w-full bg-red-500 text-white py-3 rounded-xl font-semibold hover:bg-red-600 transition-colors flex items-center justify-center">
-                <span class="mr-2">🔍</span> Continue with Google
+        <div class="auth-forms" id="authForms">
+            <button class="back-btn" id="backBtn">
+                <i class="fas fa-arrow-left"></i>
             </button>
-            <div class="mt-6 text-center">
-                <button onclick="closeLoginModal()" class="text-gray-500 hover:text-gray-700">Close</button>
+            <div class="form-container">
+                <div class="form-header">
+                    <h2 id="formTitle">Login to Your Account</h2>
+                    <p id="formSubtitle">Access your personalized dashboard</p>
+                </div>
+                
+                <div class="form-toggle">
+                    <button id="loginToggle" class="active">Login</button>
+                    <button id="signupToggle">Sign Up</button>
+                </div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <div class="password-container">
+                            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                            <button type="button" class="toggle-password" id="toggleLoginPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Login Now</button>
+                </form>
+                
+                <form id="signupForm" class="hidden">
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupEmail">Email Address</label>
+                        <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <div class="password-container">
+                            <input type="password" id="signupPassword" placeholder="Create a password" required>
+                            <button type="button" class="toggle-password" id="toggleSignupPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="password-container">
+                            <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                            <button type="button" class="toggle-password" id="toggleConfirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Create Account</button>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Support Chat -->
-    <div class="fixed bottom-6 right-6 z-40">
-        <button class="bg-primary text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-all transform hover:scale-110">
-            💬
-        </button>
-    </div>
-
-    <!-- Firebase SDK and initialization -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-        import { 
-            getAuth, 
-            GoogleAuthProvider, 
-            signInWithPopup, 
-            signInWithEmailAndPassword,
-            onAuthStateChanged,
-            signOut
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyD4a9-GfumDhkpmkSvr4tKfvHxhTq5upgw",
-          authDomain: "examhub-auth-5f84b.firebaseapp.com",
-          projectId: "examhub-auth-5f84b",
-          storageBucket: "examhub-auth-5f84b.appspot.com",
-          messagingSenderId: "577946327245",
-          appId: "1:577946327245:web:0820c5e11c67f3ec32b184",
-          measurementId: "G-6Q06GL3C4X"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        // Auth state listener
-        onAuthStateChanged(auth, (user) => {
-            const heroAuthButton = document.getElementById('heroAuthButton');
-            
-            if (user) {
-                // User is signed in
-                document.getElementById('loginRequired').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                
-                // Update navigation
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userEmail').classList.remove('hidden');
-                document.getElementById('logoutButton').classList.remove('hidden');
-                document.getElementById('authButtons').classList.add('hidden');
-                
-                // Update hero button
-                heroAuthButton.textContent = "My Account";
-                heroAuthButton.onclick = function() {
-                    // Redirect to account page or show account modal
-                    alert("Redirecting to your account page");
-                };
-                
-                closeLoginModal();
-            } else {
-                // User is signed out
-                document.getElementById('loginRequired').style.display = 'flex';
-                document.getElementById('mainContent').style.display = 'none';
-                
-                // Update navigation
-                document.getElementById('userEmail').classList.add('hidden');
-                document.getElementById('logoutButton').classList.add('hidden');
-                document.getElementById('authButtons').classList.remove('hidden');
-                
-                // Update hero button
-                heroAuthButton.textContent = "Login / Signup";
-                heroAuthButton.onclick = function() {
-                    openLoginModal();
-                };
-            }
-        });
-
-        // Email/password login
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                alert('Login successful!');
-            } catch (error) {
-                alert('Login failed: ' + error.message);
-            }
-        });
-
-        // Google sign-in
-        window.signInWithGoogle = async function() {
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (error) {
-                alert("Google sign-in failed: " + error.message);
-            }
-        }
-
-        // Logout function
-        window.handleLogout = function() {
-            signOut(auth).then(() => {
-                // Sign-out successful
-            }).catch((error) => {
-                alert("Logout failed: " + error.message);
-            });
-        }
-
-        // Check auth before action
-        window.checkAuthBeforeAction = function() {
-            if (auth.currentUser) {
-                // User is logged in - maybe redirect to dashboard
-                alert("You're already logged in as " + auth.currentUser.email);
-            } else {
-                openLoginModal();
-            }
-        }
-
-        // Modal functions
-        window.openLoginModal = function() {
-            document.getElementById('loginModal').classList.remove('hidden');
-        }
-
-        window.closeLoginModal = function() {
-            document.getElementById('loginModal').classList.add('hidden');
-        }
-    </script>
-
-    <!-- Your existing script -->
     <script>
-        // Search functionality
-        function performSearch() {
-            const query = document.getElementById('mainSearch').value;
-            if (query.trim()) {
-                showSuggestions();
-                // Simulate search results
-                setTimeout(() => {
-                    alert(`🔍 Found 23 papers for "${query}". Login to download!`);
-                }, 1000);
-            }
-        }
-
-        function showSuggestions() {
-            document.getElementById('suggestions').classList.remove('hidden');
-        }
-
-        function startVoiceSearch() {
-            alert('🎤 Voice search activated! Say your query...');
-            // In a real app, this would use Web Speech API
-        }
-
-        // Search input event listener
-        document.getElementById('mainSearch').addEventListener('input', function() {
-            if (this.value.length > 2) {
-                showSuggestions();
-            } else {
-                document.getElementById('suggestions').classList.add('hidden');
-            }
-        });
-
-        // Suggestion click handlers
-        document.querySelectorAll('.suggestion-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.getElementById('mainSearch').value = this.textContent;
-                document.getElementById('suggestions').classList.add('hidden');
-                performSearch();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get DOM elements
+            const getStartedBtn = document.getElementById('getStartedBtn');
+            const backBtn = document.getElementById('backBtn');
+            const welcomeSection = document.getElementById('welcomeSection');
+            const authForms = document.getElementById('authForms');
+            const loginToggle = document.getElementById('loginToggle');
+            const signupToggle = document.getElementById('signupToggle');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const formTitle = document.getElementById('formTitle');
+            const formSubtitle = document.getElementById('formSubtitle');
+            
+            // Password toggles
+            const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+            const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            
+            // Show authentication forms
+            getStartedBtn.addEventListener('click', function() {
+                welcomeSection.classList.add('hidden');
+                authForms.classList.add('show-forms');
             });
-        });
-
-        // Enter key search
-        document.getElementById('mainSearch').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
+            
+            // Go back to welcome screen
+            backBtn.addEventListener('click', function() {
+                authForms.classList.remove('show-forms');
+                setTimeout(() => {
+                    welcomeSection.classList.remove('hidden');
+                }, 300);
+            });
+            
+            // Toggle between login and signup forms
+            loginToggle.addEventListener('click', function() {
+                loginToggle.classList.add('active');
+                signupToggle.classList.remove('active');
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                formTitle.textContent = 'Login to Your Account';
+                formSubtitle.textContent = 'Access your personalized dashboard';
+            });
+            
+            signupToggle.addEventListener('click', function() {
+                signupToggle.classList.add('active');
+                loginToggle.classList.remove('active');
+                signupForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                formTitle.textContent = 'Create an Account';
+                formSubtitle.textContent = 'Join our community today';
+            });
+            
+            // Toggle password visibility
+            function setupPasswordToggle(button, inputId) {
+                button.addEventListener('click', function() {
+                    const input = document.getElementById(inputId);
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    
+                    // Toggle eye icon
+                    const icon = button.querySelector('i');
+                    icon.classList.toggle('fa-eye');
+                    icon.classList.toggle('fa-eye-slash');
+                });
             }
-        });
-
-        // Fade in animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
+            
+            setupPasswordToggle(toggleLoginPassword, 'loginPassword');
+            setupPasswordToggle(toggleSignupPassword, 'signupPassword');
+            setupPasswordToggle(toggleConfirmPassword, 'confirmPassword');
+            
+            // Form submission handling
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                // Simple validation
+                if(email && password) {
+                    alert('Login successful! Redirecting to dashboard...');
+                    // In a real app, you would handle the login process here
+                } else {
+                    alert('Please fill in all fields');
                 }
             });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
+            
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('signupName').value;
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                // Simple validation
+                if(!name || !email || !password || !confirmPassword) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                if(password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+                
+                alert('Account created successfully! Welcome to our platform.');
+                // In a real app, you would handle the signup process here
+            });
         });
     </script>
 </body>
