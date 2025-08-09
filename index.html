@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EXAMHUB.AI - India's #1 AI Exam Paper Search Tool</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Add Razorpay checkout script -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -60,374 +58,312 @@
             transform: scale(1.1);
             box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
         }
-        /* Payment modal styles */
-        .payment-modal {
-            transition: all 0.3s ease;
-        }
-        .payment-modal.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .payment-modal.visible {
-            opacity: 1;
-        }
-        .payment-method {
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .payment-method:hover {
-            border-color: #3B82F6;
-            background-color: #f8fafc;
-        }
-        .payment-method.selected {
-            border-color: #3B82F6;
-            background-color: #f0f7ff;
-        }
-        .payment-icon {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- [Previous loginRequired and mainContent sections remain exactly the same] -->
-    <!-- Only showing the modified parts for payment integration -->
-
-    <!-- Pricing Plans Section (updated with payment buttons) -->
-    <section class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">Choose Your Plan</h2>
-            <p class="text-center text-gray-600 mb-12">Unlock unlimited access to thousands of exam papers</p>
-            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                <!-- Free Plan -->
-                <div class="bg-gray-50 rounded-2xl p-8 fade-in">
-                    <h3 class="text-2xl font-bold mb-4">Free</h3>
-                    <div class="text-4xl font-bold mb-6">₹0<span class="text-lg text-gray-500">/month</span></div>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> 5 downloads per month</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Basic search</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Limited AI suggestions</li>
-                        <li class="flex items-center"><span class="text-red-500 mr-2">✗</span> No premium papers</li>
-                    </ul>
-                    <button class="w-full bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold">Current Plan</button>
-                </div>
-                <!-- Pro Plan -->
-                <div class="bg-primary text-white rounded-2xl p-8 transform scale-105 glow-effect fade-in" style="animation-delay: 0.2s">
-                    <div class="bg-secondary px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">MOST POPULAR</div>
-                    <h3 class="text-2xl font-bold mb-4">Pro</h3>
-                    <div class="text-4xl font-bold mb-6">₹29<span class="text-lg opacity-75">/month</span></div>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Unlimited downloads</li>
-                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Advanced AI search</li>
-                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> All premium papers</li>
-                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Download history</li>
-                    </ul>
-                    <button onclick="showPaymentOptions('pro')" class="w-full bg-white text-primary py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors pulse-animation">
-                        Upgrade Now
-                    </button>
-                </div>
-                <!-- Premium Plan -->
-                <div class="bg-gray-50 rounded-2xl p-8 fade-in" style="animation-delay: 0.4s">
-                    <h3 class="text-2xl font-bold mb-4">Premium</h3>
-                    <div class="text-4xl font-bold mb-6">₹49<span class="text-lg text-gray-500">/month</span></div>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Everything in Pro</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Priority support</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Early access to new papers</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Custom study plans</li>
-                    </ul>
-                    <button onclick="showPaymentOptions('premium')" class="w-full bg-secondary text-white py-3 rounded-xl font-semibold hover:bg-purple-600 transition-colors">
-                        Choose Premium
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Payment Options Modal -->
-    <div id="paymentOptionsModal" class="payment-modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-2" id="paymentPlanTitle">Choose Payment Method</h2>
-                <p class="text-gray-600" id="paymentPlanDesc">Select your preferred payment method</p>
-                
-                <div class="mt-6 text-left">
-                    <div class="payment-method selected" onclick="selectPaymentMethod('razorpay')" id="razorpayMethod">
-                        <div class="flex items-center">
-                            <img src="https://razorpay.com/build/browser/static/logo.6d0c71c4.svg" alt="Razorpay" class="payment-icon mr-3">
-                            <div>
-                                <h4 class="font-medium">Credit/Debit Card</h4>
-                                <p class="text-sm text-gray-500">Pay using Visa, Mastercard, Rupay, etc.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="payment-method" onclick="selectPaymentMethod('googlepay')" id="googlepayMethod">
-                        <div class="flex items-center">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Pay_%28GPay%29_Logo.svg/512px-Google_Pay_%28GPay%29_Logo.svg.png" alt="Google Pay" class="payment-icon mr-3">
-                            <div>
-                                <h4 class="font-medium">Google Pay</h4>
-                                <p class="text-sm text-gray-500">Fast and secure UPI payments</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="payment-method" onclick="selectPaymentMethod('upi')" id="upiMethod">
-                        <div class="flex items-center">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/UPI-Logo-vector.svg/1200px-UPI-Logo-vector.svg.png" alt="UPI" class="payment-icon mr-3">
-                            <div>
-                                <h4 class="font-medium">UPI Apps</h4>
-                                <p class="text-sm text-gray-500">Pay using any UPI app (PhonePe, Paytm, etc.)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mt-6 flex justify-between">
-                    <button onclick="closePaymentOptionsModal()" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors">
-                        Cancel
-                    </button>
-                    <button onclick="proceedToPayment()" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
-                        Continue to Payment
-                    </button>
-                </div>
+    <!-- Login Required Screen -->
+    <div id="loginRequired" class="fixed inset-0 bg-white z-50 flex items-center justify-center px-4">
+        <div class="max-w-md w-full text-center">
+            <h1 class="text-4xl font-bold text-primary mb-6">EXAMHUB.AI</h1>
+            <div class="bg-white rounded-2xl p-8 shadow-xl">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Login Required</h2>
+                <p class="text-gray-600 mb-6">Please login to access India's #1 AI Exam Paper Search Tool</p>
+                <button onclick="openLoginModal()" class="w-full bg-primary text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors mb-3">
+                    Login
+                </button>
+                <button onclick="openLoginModal()" class="w-full bg-secondary text-white py-3 rounded-xl font-semibold hover:bg-purple-600 transition-colors glow-effect">
+                    Sign Up
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Payment Processing Modal -->
-    <div id="paymentModal" class="payment-modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+    <!-- Main Content (hidden initially) -->
+    <div id="mainContent" style="display: none;">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <div class="text-2xl font-bold text-primary">EXAMHUB.AI</div>
+                        <div class="ml-2 text-xs bg-secondary text-white px-2 py-1 rounded-full">BETA</div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="text-gray-600 hover:text-primary transition-colors">Features</button>
+                        <button class="text-gray-600 hover:text-primary transition-colors">Pricing</button>
+                        <div id="userEmail" class="hidden text-sm font-medium text-gray-700"></div>
+                        <div id="authButtons" class="flex items-center space-x-4">
+                            <button onclick="openLoginModal()" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">Login</button>
+                            <button onclick="openLoginModal()" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors glow-effect">Sign Up</button>
+                        </div>
+                        <button id="logoutButton" onclick="handleLogout()" class="hidden bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 fade-in">India's #1 AI Exam Paper Search Tool</h1>
+                <p class="text-xl md:text-2xl mb-8 fade-in" style="animation-delay: 0.2s">Type any subject, class or year – get direct PDF instantly</p>
+                <!-- Main Search Bar -->
+                <div class="max-w-3xl mx-auto mb-8 fade-in" style="animation-delay: 0.4s">
+                    <div class="relative">
+                        <input type="text" id="mainSearch" placeholder="Try: '2023 Class 12 Chemistry paper' or 'CBSE 10th Maths 2022'" 
+                               class="w-full px-6 py-4 text-lg text-gray-800 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300 pr-20">
+                        <button class="voice-btn absolute right-2 top-2 p-3 rounded-xl text-white" onclick="startVoiceSearch()">
+                            🎤
+                        </button>
+                    </div>
+                    <!-- AI Suggestions -->
+                    <div id="suggestions" class="mt-4 bg-white rounded-xl shadow-lg p-4 text-gray-800 hidden">
+                        <div class="text-sm text-gray-600 mb-2">🤖 AI Suggestions:</div>
+                        <div class="space-y-2">
+                            <div class="suggestion-item p-2 hover:bg-gray-100 rounded cursor-pointer">CBSE Class 12 Physics 2023 Board Paper</div>
+                            <div class="suggestion-item p-2 hover:bg-gray-100 rounded cursor-pointer">Maharashtra Board 10th Science 2022</div>
+                            <div class="suggestion-item p-2 hover:bg-gray-100 rounded cursor-pointer">NCERT Class 11 Chemistry Sample Papers</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in" style="animation-delay: 0.6s">
+                    <button onclick="performSearch()" class="bg-white text-primary px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all transform hover:scale-105">
+                        🔍 Start Searching
+                    </button>
+                    <button id="heroAuthButton" onclick="checkAuthBeforeAction()" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-primary transition-all transform hover:scale-105">
+                        Login / Signup
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rest of your content sections remain the same -->
+        <!-- 3-Step Process, Top Trending Papers, Pricing Plans etc. -->
+        
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
             <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-2" id="paymentProcessingTitle">Processing Payment</h2>
-                <p class="text-gray-600" id="paymentProcessingDesc">Please wait while we process your payment</p>
-                <div class="mt-6">
-                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Welcome to ExamHub.ai</h2>
+                <p class="text-gray-600">Login to access thousands of exam papers</p>
+            </div>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <input type="email" id="loginEmail" placeholder="Email address" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary" required>
                 </div>
-                <div class="mt-6 hidden" id="paymentSuccess">
-                    <svg class="w-16 h-16 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <h3 class="text-xl font-semibold mt-4">Payment Successful!</h3>
-                    <p class="text-gray-600 mt-2">Your account has been upgraded</p>
-                    <button onclick="closePaymentModal()" class="mt-6 bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
-                        Continue to Dashboard
-                    </button>
+                <div>
+                    <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary" required>
                 </div>
-                <div class="mt-6 hidden" id="paymentFailure">
-                    <svg class="w-16 h-16 text-red-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                    <h3 class="text-xl font-semibold mt-4">Payment Failed</h3>
-                    <p class="text-gray-600 mt-2" id="paymentError">Please try again or use another payment method</p>
-                    <button onclick="closePaymentModal()" class="mt-6 bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors">
-                        Try Again
-                    </button>
-                </div>
+                <button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors">
+                    Login
+                </button>
+            </form>
+            <div class="my-6 text-center text-gray-500">or</div>
+            <button onclick="signInWithGoogle()" class="w-full bg-red-500 text-white py-3 rounded-xl font-semibold hover:bg-red-600 transition-colors flex items-center justify-center">
+                <span class="mr-2">🔍</span> Continue with Google
+            </button>
+            <div class="mt-6 text-center">
+                <button onclick="closeLoginModal()" class="text-gray-500 hover:text-gray-700">Close</button>
             </div>
         </div>
     </div>
 
-    <!-- [Rest of your existing HTML remains the same] -->
+    <!-- Support Chat -->
+    <div class="fixed bottom-6 right-6 z-40">
+        <button class="bg-primary text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-all transform hover:scale-110">
+            💬
+        </button>
+    </div>
 
-    <!-- Updated JavaScript with Payment Integration -->
-    <script>
-        // Payment variables
-        let selectedPlan = null;
-        let selectedPaymentMethod = 'razorpay';
-        
-        // Show payment options modal
-        function showPaymentOptions(plan) {
-            selectedPlan = plan;
-            const planDetails = {
-                pro: {
-                    name: "Pro Plan",
-                    amount: 29,
-                    duration: "monthly"
-                },
-                premium: {
-                    name: "Premium Plan",
-                    amount: 49,
-                    duration: "monthly"
-                }
-            };
+    <!-- Firebase SDK and initialization -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { 
+            getAuth, 
+            GoogleAuthProvider, 
+            signInWithPopup, 
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyD4a9-GfumDhkpmkSvr4tKfvHxhTq5upgw",
+          authDomain: "examhub-auth-5f84b.firebaseapp.com",
+          projectId: "examhub-auth-5f84b",
+          storageBucket: "examhub-auth-5f84b.appspot.com",
+          messagingSenderId: "577946327245",
+          appId: "1:577946327245:web:0820c5e11c67f3ec32b184",
+          measurementId: "G-6Q06GL3C4X"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Auth state listener
+        onAuthStateChanged(auth, (user) => {
+            const heroAuthButton = document.getElementById('heroAuthButton');
             
-            document.getElementById('paymentPlanTitle').textContent = `Upgrade to ${planDetails[plan].name}`;
-            document.getElementById('paymentPlanDesc').textContent = `₹${planDetails[plan].amount}/${planDetails[plan].duration}`;
-            document.getElementById('paymentOptionsModal').classList.remove('hidden');
-            document.getElementById('paymentOptionsModal').classList.add('visible');
-        }
-        
-        // Close payment options modal
-        function closePaymentOptionsModal() {
-            document.getElementById('paymentOptionsModal').classList.add('hidden');
-            document.getElementById('paymentOptionsModal').classList.remove('visible');
-        }
-        
-        // Select payment method
-        function selectPaymentMethod(method) {
-            selectedPaymentMethod = method;
-            
-            // Remove selected class from all methods
-            document.querySelectorAll('.payment-method').forEach(el => {
-                el.classList.remove('selected');
-            });
-            
-            // Add selected class to clicked method
-            document.getElementById(`${method}Method`).classList.add('selected');
-        }
-        
-        // Proceed to payment based on selected method
-        function proceedToPayment() {
-            closePaymentOptionsModal();
-            
-            // Show processing modal
-            document.getElementById('paymentProcessingTitle').textContent = `Processing ${selectedPlan} payment`;
-            document.getElementById('paymentProcessingDesc').textContent = `Redirecting to ${selectedPaymentMethod}...`;
-            document.getElementById('paymentModal').classList.remove('hidden');
-            document.getElementById('paymentModal').classList.add('visible');
-            
-            // Based on selected method, initiate appropriate payment flow
-            if (selectedPaymentMethod === 'razorpay') {
-                initiateRazorpayPayment();
-            } else if (selectedPaymentMethod === 'googlepay') {
-                initiateGooglePay();
-            } else if (selectedPaymentMethod === 'upi') {
-                initiateUPIPayment();
-            }
-        }
-        
-        // Razorpay payment
-        function initiateRazorpayPayment() {
-            const planDetails = {
-                pro: {
-                    name: "Pro Plan",
-                    amount: 2900, // in paise (₹29)
-                    duration: "monthly"
-                },
-                premium: {
-                    name: "Premium Plan",
-                    amount: 4900, // in paise (₹49)
-                    duration: "monthly"
-                }
-            };
-            
-            const plan = planDetails[selectedPlan];
-            
-            // Replace with your actual Razorpay key from dashboard
-            const razorpayKey = 'rzp_test_YOUR_KEY_HERE';
-            
-            // Configure Google Pay and UPI in Razorpay options
-            const options = {
-                key: razorpayKey,
-                amount: plan.amount,
-                currency: 'INR',
-                name: 'EXAMHUB.AI',
-                description: plan.name,
-                image: 'https://examhub.ai/logo.png',
-                order_id: 'order_' + Math.random().toString(36).substr(2, 9),
-                handler: function(response) {
-                    // Payment success handler
-                    document.getElementById('paymentSuccess').classList.remove('hidden');
-                    document.getElementById('paymentFailure').classList.add('hidden');
-                    
-                    // Here you would typically call your backend to verify and activate the subscription
-                    console.log('Payment successful:', response);
-                    
-                    // Update user's plan in your database (via API call in real app)
-                    setTimeout(() => {
-                        alert(`🎉 Your account has been upgraded to ${plan.name}!`);
-                        closePaymentModal();
-                    }, 2000);
-                },
-                prefill: {
-                    name: 'John Doe', // Get from user profile
-                    email: 'user@example.com', // Get from user profile
-                    contact: '9876543210' // Get from user profile
-                },
-                notes: {
-                    plan: plan.name,
-                    user_id: 'current_user_id' // Get from auth system
-                },
-                theme: {
-                    color: '#3B82F6'
-                },
-                method: {
-                    netbanking: true,
-                    card: true,
-                    wallet: true,
-                    upi: true, // Enable UPI payments
-                    paylater: false
-                },
-                modal: {
-                    ondismiss: function() {
-                        // Handle when user closes the payment modal
-                        document.getElementById('paymentFailure').classList.remove('hidden');
-                        document.getElementById('paymentError').textContent = 'Payment was cancelled';
-                    }
-                }
-            };
-            
-            // Enable Google Pay specifically
-            if (selectedPaymentMethod === 'googlepay') {
-                options.method = {
-                    upi: true,
-                    wallet: ['googlepay']
+            if (user) {
+                // User is signed in
+                document.getElementById('loginRequired').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                
+                // Update navigation
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userEmail').classList.remove('hidden');
+                document.getElementById('logoutButton').classList.remove('hidden');
+                document.getElementById('authButtons').classList.add('hidden');
+                
+                // Update hero button
+                heroAuthButton.textContent = "My Account";
+                heroAuthButton.onclick = function() {
+                    // Redirect to account page or show account modal
+                    alert("Redirecting to your account page");
+                };
+                
+                closeLoginModal();
+            } else {
+                // User is signed out
+                document.getElementById('loginRequired').style.display = 'flex';
+                document.getElementById('mainContent').style.display = 'none';
+                
+                // Update navigation
+                document.getElementById('userEmail').classList.add('hidden');
+                document.getElementById('logoutButton').classList.add('hidden');
+                document.getElementById('authButtons').classList.remove('hidden');
+                
+                // Update hero button
+                heroAuthButton.textContent = "Login / Signup";
+                heroAuthButton.onclick = function() {
+                    openLoginModal();
                 };
             }
+        });
+
+        // Email/password login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
             
-            // Enable UPI specifically
-            if (selectedPaymentMethod === 'upi') {
-                options.method = {
-                    upi: true,
-                    card: false,
-                    netbanking: false,
-                    wallet: false
-                };
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                alert('Login successful!');
+            } catch (error) {
+                alert('Login failed: ' + error.message);
             }
-            
-            const rzp = new Razorpay(options);
-            
-            rzp.on('payment.failed', function(response) {
-                document.getElementById('paymentFailure').classList.remove('hidden');
-                document.getElementById('paymentError').textContent = 
-                    response.error.description || 'Payment failed. Please try again.';
-                console.error('Payment failed:', response.error);
-            });
-            
-            rzp.open();
-        }
-        
-        // Google Pay payment
-        function initiateGooglePay() {
-            // For demo, we'll use Razorpay's Google Pay integration
-            // In production, you might want to implement native Google Pay API
-            initiateRazorpayPayment();
-        }
-        
-        // UPI payment
-        function initiateUPIPayment() {
-            // For demo, we'll use Razorpay's UPI integration
-            // In production, you might want to implement deep links for specific UPI apps
-            initiateRazorpayPayment();
-        }
-        
-        // Close payment modal
-        function closePaymentModal() {
-            document.getElementById('paymentModal').classList.add('hidden');
-            document.getElementById('paymentModal').classList.remove('visible');
-            document.getElementById('paymentSuccess').classList.add('hidden');
-            document.getElementById('paymentFailure').classList.add('hidden');
+        });
+
+        // Google sign-in
+        window.signInWithGoogle = async function() {
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                alert("Google sign-in failed: " + error.message);
+            }
         }
 
-        // [Rest of your existing JavaScript remains the same]
+        // Logout function
+        window.handleLogout = function() {
+            signOut(auth).then(() => {
+                // Sign-out successful
+            }).catch((error) => {
+                alert("Logout failed: " + error.message);
+            });
+        }
+
+        // Check auth before action
+        window.checkAuthBeforeAction = function() {
+            if (auth.currentUser) {
+                // User is logged in - maybe redirect to dashboard
+                alert("You're already logged in as " + auth.currentUser.email);
+            } else {
+                openLoginModal();
+            }
+        }
+
+        // Modal functions
+        window.openLoginModal = function() {
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+
+        window.closeLoginModal = function() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
     </script>
 
-    <!-- [Your existing Firebase and other scripts remain the same] -->
+    <!-- Your existing script -->
+    <script>
+        // Search functionality
+        function performSearch() {
+            const query = document.getElementById('mainSearch').value;
+            if (query.trim()) {
+                showSuggestions();
+                // Simulate search results
+                setTimeout(() => {
+                    alert(`🔍 Found 23 papers for "${query}". Login to download!`);
+                }, 1000);
+            }
+        }
+
+        function showSuggestions() {
+            document.getElementById('suggestions').classList.remove('hidden');
+        }
+
+        function startVoiceSearch() {
+            alert('🎤 Voice search activated! Say your query...');
+            // In a real app, this would use Web Speech API
+        }
+
+        // Search input event listener
+        document.getElementById('mainSearch').addEventListener('input', function() {
+            if (this.value.length > 2) {
+                showSuggestions();
+            } else {
+                document.getElementById('suggestions').classList.add('hidden');
+            }
+        });
+
+        // Suggestion click handlers
+        document.querySelectorAll('.suggestion-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.getElementById('mainSearch').value = this.textContent;
+                document.getElementById('suggestions').classList.add('hidden');
+                performSearch();
+            });
+        });
+
+        // Enter key search
+        document.getElementById('mainSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
