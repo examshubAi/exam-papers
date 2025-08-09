@@ -130,8 +130,24 @@
             opacity: 0;
         }
         
+        .dashboard-section {
+            flex: 1;
+            background: white;
+            padding: 50px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
         .show-auth {
             transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .show-dashboard {
+            display: flex;
             opacity: 1;
         }
         
@@ -375,6 +391,10 @@
                 padding: 40px 20px;
             }
             
+            .dashboard-section {
+                padding: 40px 20px;
+            }
+            
             .back-btn {
                 top: 15px;
                 left: 15px;
@@ -390,9 +410,178 @@
             50% { transform: translateY(-15px); }
             100% { transform: translateY(0px); }
         }
+        
+        /* Loading spinner styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #ff416c;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: white;
+            font-size: 24px;
+            font-weight: 500;
+        }
+        
+        /* Dashboard styles */
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-header h2 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-header p {
+            color: #777;
+            font-size: 18px;
+        }
+        
+        .dashboard-content {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .dashboard-card {
+            background: #f9f9f9;
+            border-radius: 15px;
+            padding: 25px;
+            width: 250px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .dashboard-card i {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #ff416c;
+        }
+        
+        .dashboard-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+        
+        .dashboard-card p {
+            color: #777;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-btn {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+        }
+        
+        .user-details {
+            text-align: left;
+        }
+        
+        .user-details h3 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .user-details p {
+            color: #777;
+            font-size: 18px;
+        }
+        
+        .logout-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 65, 108, 0.1);
+            color: #ff416c;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 65, 108, 0.2);
+        }
     </style>
 </head>
 <body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Redirecting to Dashboard...</div>
+    </div>
+    
     <div class="container">
         <div class="welcome-section" id="welcomeSection">
             <div class="logo floating">
@@ -499,6 +688,55 @@
                 </div>
             </div>
         </div>
+        
+        <div class="dashboard-section" id="dashboardSection">
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+            
+            <div class="dashboard-header">
+                <h2>Welcome to Your Dashboard</h2>
+                <p>Manage your account and access premium features</p>
+            </div>
+            
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">U</div>
+                <div class="user-details">
+                    <h3 id="userName">User Name</h3>
+                    <p id="userEmail">user@example.com</p>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="dashboard-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Analytics</h3>
+                    <p>View your usage statistics and performance metrics</p>
+                    <button class="dashboard-btn">View Report</button>
+                </div>
+                
+                <div class="dashboard-card">
+                    <i class="fas fa-cog"></i>
+                    <h3>Settings</h3>
+                    <p>Customize your preferences and security options</p>
+                    <button class="dashboard-btn">Manage</button>
+                </div>
+                
+                <div class="dashboard-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Team</h3>
+                    <p>Manage your team members and permissions</p>
+                    <button class="dashboard-btn">Invite Users</button>
+                </div>
+                
+                <div class="dashboard-card">
+                    <i class="fas fa-bell"></i>
+                    <h3>Notifications</h3>
+                    <p>Configure your alerts and notifications</p>
+                    <button class="dashboard-btn">Set Preferences</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -508,12 +746,18 @@
             const backBtn = document.getElementById('backBtn');
             const welcomeSection = document.getElementById('welcomeSection');
             const authSection = document.getElementById('authSection');
+            const dashboardSection = document.getElementById('dashboardSection');
             const loginToggle = document.getElementById('loginToggle');
             const signupToggle = document.getElementById('signupToggle');
             const loginForm = document.getElementById('loginForm');
             const signupForm = document.getElementById('signupForm');
             const formTitle = document.getElementById('formTitle');
             const formSubtitle = document.getElementById('formSubtitle');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const userName = document.getElementById('userName');
+            const userEmail = document.getElementById('userEmail');
+            const userAvatar = document.getElementById('userAvatar');
             
             // Password toggles
             const toggleLoginPassword = document.getElementById('toggleLoginPassword');
@@ -581,8 +825,25 @@
                 
                 // Simple validation
                 if(email && password) {
-                    alert('Login successful! Redirecting to dashboard...');
-                    // In a real app, you would handle the login process here
+                    // Show loading overlay
+                    loadingOverlay.style.display = 'flex';
+                    
+                    // Set user info in dashboard
+                    userName.textContent = email.split('@')[0];
+                    userEmail.textContent = email;
+                    userAvatar.textContent = email.charAt(0).toUpperCase();
+                    
+                    // Simulate API call delay
+                    setTimeout(() => {
+                        // Hide auth and loading, show dashboard
+                        authSection.classList.remove('show-auth');
+                        loadingOverlay.style.display = 'none';
+                        dashboardSection.classList.add('show-dashboard');
+                        
+                        // Hide welcome section
+                        welcomeSection.style.display = 'none';
+                        authSection.style.display = 'none';
+                    }, 2000);
                 } else {
                     alert('Please fill in all fields');
                 }
@@ -613,7 +874,18 @@
                 }
                 
                 alert('Account created successfully! Welcome to our platform.');
-                // In a real app, you would handle the signup process here
+                // Automatically switch to login form
+                loginToggle.click();
+            });
+            
+            // Logout functionality
+            logoutBtn.addEventListener('click', function() {
+                dashboardSection.classList.remove('show-dashboard');
+                welcomeSection.style.display = 'flex';
+                
+                // Reset login form
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
             });
         });
     </script>
